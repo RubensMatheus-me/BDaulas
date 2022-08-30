@@ -1,0 +1,44 @@
+DROP DATABASE IF EXISTS projeto;
+CREATE DATABASE projeto;
+USE projeto;
+
+DROP TABLE IF EXISTS cliente;
+CREATE TABLE cliente(
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(255) NOT NULL UNIQUE,
+rg INT NOT NULL UNIQUE,
+idade INT NOT NULL,
+ativo CHAR(1) NOT NULL DEFAULT 'S'
+);
+
+INSERT INTO cliente (id, nome, rg, idade, ativo) VALUES (NULL, 'Rubens Matheus', 0905242, 17, 'S'); 
+INSERT INTO cliente VALUES (NULL, 'Gustavo Lopes', 942855, 17, 'S');
+INSERT INTO cliente (nome, rg, idade) VALUES ('Daniel da Massa', 904928, 19); 
+
+DROP TABLE IF EXISTS cidade;
+CREATE TABLE cidade(
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(255) NOT NULL,
+ativo CHAR(1) NOT NULL DEFAULT 'S'
+);
+
+INSERT INTO cidade (id, nome, ativo) VALUES (NULL, 'PARANAVAÍ','S'); 
+INSERT INTO cidade VALUES (NULL, 'MARINGÁ','S');
+INSERT INTO cidade (nome) VALUES ('LONDRINA'); 
+
+DROP TABLE IF EXISTS produto;
+CREATE TABLE produto(
+id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(255) NOT NULL UNIQUE,
+preco_produto FLOAT NOT NULL,
+estoque CHAR(3) NOT NULL DEFAULT 'SIM',
+ativo CHAR(1) NOT NULL DEFAULT 'S'
+);
+
+INSERT INTO produto (id, nome,preco_produto, estoque, ativo) VALUES (NULL, 'SABONETE', '1.99', 'SIM', 'S'); 
+INSERT INTO produto VALUES (NULL, '1KG DE CARNE', 12.50, 'SIM', 'S');
+INSERT INTO produto (nome,preco_produto,estoque) VALUES ('LEITE', 8.34, 'SIM'); 
+
+SELECT * FROM produto;
+SELECT * FROM cliente;
+SELECT * FROM cidade; 
