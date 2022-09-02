@@ -1,0 +1,62 @@
+-- ATIVIDADE INSERT
+
+-- 1) Escreva o comando para inserir um registro da tabela estado
+INSERT INTO estado (nome,sigla) VALUES ('PARANÁ','PR'); 
+INSERT INTO estado (nome,sigla) VALUES ('SÃO PAULO','SP'); 
+
+--2) Escreva o comando para inserir registros da tabela cidade com a FK 
+
+INSERT INTO cidade (id,nome,estado_id,ativo,data_cadastro) VALUES (NULL, 'CRUZEIRO DO SUL',1,'S','2022-09-02'); 
+INSERT INTO cidade (nome,estado_id,ativo,data_cadastro) VALUES ('PARANAVAÍ',2,'S','2022-09-02'); 
+INSERT INTO cidade (nome,estado_id) VALUES ('CAMPINAS',3);
+
+
+
+--ATIVIDADE DELETE
+
+INSERT INTO estado (nome,sigla) VALUES ('PARANA','PR');
+INSERT INTO estado (nome,sigla) VALUES ('SÃO PAULO','SP');
+INSERT INTO estado (nome,sigla) VALUES ('MATO GROSSO','MT');
+INSERT INTO estado (nome,sigla) VALUES ('SANTA CATARINA','SC');
+INSERT INTO estado (nome,sigla) VALUES ('RIO GRANDE DO SUL','RS');
+
+-- inserindo cidades
+INSERT INTO cidade (nome, estado_id) VALUES ('BAURU',2);
+INSERT INTO cidade (nome, estado_id) VALUES ('MARINGÁ',1);
+INSERT INTO cidade (nome, estado_id) VALUES ('GUARULHOS',2);
+INSERT INTO cidade (nome, estado_id) VALUES ('CAMPINAS',2);
+INSERT INTO cidade (nome, estado_id) VALUES ('FLORIANÓPOLIS',4);
+INSERT INTO cidade (nome, estado_id) VALUES ('PARANAVAÍ',1);
+INSERT INTO cidade (nome, estado_id) VALUES ('CUIABA',3);
+INSERT INTO cidade (nome, estado_id) VALUES ('BALNEÁRIO CAMBORIÚ',4);
+INSERT INTO cidade (nome, estado_id) VALUES ('LONDRINA',1);
+INSERT INTO cidade (nome, estado_id) VALUES ('CASCAVEL',1);
+INSERT INTO cidade (nome, estado_id) VALUES ('JOINVILLE',4);
+INSERT INTO cidade (nome, estado_id) VALUES ('PORTO ALEGRE',5);
+INSERT INTO cidade (nome, estado_id) VALUES ('BLUMENAL',4);
+INSERT INTO cidade (nome, estado_id) VALUES ('BARRA DOS GARÇAS',3);
+INSERT INTO cidade (nome, estado_id) VALUES ('CHAPECÓ',4);
+INSERT INTO cidade (nome, estado_id) VALUES ('ITAJAÍ',4);
+
+--1-EXERCÍCIO PARA ALTERAR UMA COLUNA DE UM REGISTRO PELO ID
+UPDATE estado SET nome = 'PARANÁ' WHERE id = 1;
+
+--2- EXERCÍCIO PARA EXCLUIR UM REGISTRO PELO NOME
+DELETE FROM estado WHERE nome = 'PARANÁ';
+
+--3-EXERCÍCIO PARA EXCLUIR TODOS OS REGISTROS DA CIDADE
+DELETE FROM cidade;
+
+
+--ATIVIDADE SELECT
+
+--1- COMANDO PARA SELECIONAR TODOS OS REGISTROS
+
+SELECT * FROM ESTADO
+
+--2- Redefine a descrição da coluna nome para nome da cidade.
+
+SELECT 
+nome 'NOME DA CIDADE'
+FROM cidade;
+
