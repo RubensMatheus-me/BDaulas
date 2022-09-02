@@ -21,18 +21,34 @@ INSERT INTO cliente (id, nome, rg, idade, ativo) VALUES (NULL, 'Rubens Matheus',
 INSERT INTO cliente VALUES (NULL, 'Gustavo Lopes', 942855, 17, 'S');
 INSERT INTO cliente (nome, rg, idade) VALUES ('Daniel da Massa', 904928, 19); 
 
+DROP TABLE IF EXISTS estado;
+CREATE TABLE estado(
+id INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(100) NOT NULL UNIQUE,
+sigla CHAR(2) NOT NULL UNIQUE,
+ativo ENUM('S','N') NOT NULL DEFAULT 'S',
+CONSTRAINT pk_estado PRIMARY KEY (id)
+);
+
+INSERT INTO estado (id, nome, sigla, ativo) VALUES (NULL, 'PARANÁ', 'PR', 'S');
+INSERT INTO estado VALUES (NULL, 'SÃO PAULO', 'SP', 'S');
+INSERT INTO estado (nome, sigla) VALUES ('BAHIA', 'BA'); 
+
+
 DROP TABLE IF EXISTS cidade;
 CREATE TABLE cidade(
 id INT NOT NULL AUTO_INCREMENT,
 nome VARCHAR(255) NOT NULL,
 ativo CHAR(1) NOT NULL DEFAULT 'S',
+estado_id INT NOT NULL, 
 CONSTRAINT pk_cidade PRIMARY KEY (id),
-CONSTRAINT tabela_cidade_ativo_prescisam_estar_entre_s_ou_n CHECK (ativo IN ('S', 'N'))
+CONSTRAINT tabela_cidade_ativo_prescisam_estar_entre_s_ou_n CHECK (ativo IN ('S', 'N')),
+CONSTRAINT fk_cidade_estado FOREIGN KEY (estado_id) REFERENCES estado (id)
 );
 
-INSERT INTO cidade (id, nome, ativo) VALUES (NULL, 'PARANAVAÍ','S'); 
-INSERT INTO cidade VALUES (NULL, 'MARINGÁ','S');
-INSERT INTO cidade (nome) VALUES ('LONDRINA'); 
+INSERT INTO cidade (id, nome, ativo, estado_id) VALUES (NULL, 'PARANAVAÍ','S', 1); 
+INSERT INTO cidade VALUES (NULL, 'SÃO PAULO','S', 2);
+INSERT INTO cidade (nome,estado_id) VALUES ('SALVADOR', 3); 
 
 DROP TABLE IF EXISTS produto;
 CREATE TABLE produto(
@@ -50,6 +66,19 @@ INSERT INTO produto (id, nome,preco_produto, estoque, ativo) VALUES (NULL, 'SABO
 INSERT INTO produto VALUES (NULL, '1KG DE CARNE', 12.50, 'SIM', 'S');
 INSERT INTO produto (nome,preco_produto,estoque) VALUES ('LEITE', 8.34, 'SIM'); 
 
-SELECT * FROM produto;
-SELECT * FROM cliente;
-SELECT * FROM cidade; 
+ALTER TABLE cliente DROP CONSTRAINT tabela_cliente_ativo_prescisam_estar_entre_s_ou_n;
+ALTER TABLE cliente MODIFY COLUMN ativo ENUM('S','N') NOT NULL;
+ALTER TABLE cidade DROP CONSTRAINT tabela_cidade_ativo_prescisam_estar_entre_s_ou_n;
+ALTER TABLE cidade MODIFY COLUMN ativo ENUM('S','N') NOT NULL;
+ALTER TABLE produto DROP CONSTRAINT tabela_produto_ativo_prescisam_estar_entre_s_ou_n;
+ALTER TABLE produto MODIFY COLUMN ativo ENUM('S','N') NOT NULL;
+ALTER TABLE produto DROP CONSTRAINT tabela_produto_estoque_prescisam_estar_entre_sim_ou_nao;
+ALTER TABLE produto MODIFY COLUMN estoque ENUM('SIM','NAO') NOT NULL;
+
+DESC cliente;
+DESC estado;
+DESC cidade;
+DESC produto
+-- SELECT * FROM produto;
+-- SELECT * FROM cliente;
+-- SELECT * FROM cidade; 
