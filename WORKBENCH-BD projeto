@@ -1,0 +1,165 @@
+-- ALUNO: RUBENS MATHEUS BATISTA DA SILVA - IFPR
+-- 1 ENGENHARIA DE SOFTWARE
+
+
+DROP DATABASE IF EXISTS projeto;
+CREATE DATABASE projeto;
+USE projeto;
+
+DROP TABLE IF EXISTS cliente;
+CREATE TABLE cliente(
+id INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(255) NOT NULL UNIQUE,
+rg INT NOT NULL UNIQUE,
+idade INT NOT NULL,
+ativo CHAR(1) NOT NULL DEFAULT 'S',
+CONSTRAINT pk_cliente PRIMARY KEY (id),
+CONSTRAINT tabela_cliente_ativo_prescisam_estar_entre_s_ou_n CHECK (ativo IN ('S', 'N'))
+);
+
+INSERT INTO cliente (id, nome, rg, idade, ativo) VALUES (NULL, 'Rubens Matheus', 0905242, 17, 'S'); 
+INSERT INTO cliente VALUES (NULL, 'Gustavo Lopes', 942855, 17, 'S');
+INSERT INTO cliente (nome, rg, idade) VALUES ('Daniel da Massa', 904928, 19); 
+
+DROP TABLE IF EXISTS estado;
+CREATE TABLE estado(
+id INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(100) NOT NULL UNIQUE,
+sigla CHAR(2) NOT NULL UNIQUE,
+ativo ENUM('S','N') NOT NULL DEFAULT 'S',
+CONSTRAINT pk_estado PRIMARY KEY (id)
+);
+
+INSERT INTO estado (id, nome, sigla, ativo) VALUES (NULL, 'PARANÁ', 'PR', 'S');
+INSERT INTO estado VALUES (NULL, 'SÃO PAULO', 'SP', 'S');
+INSERT INTO estado (nome, sigla) VALUES ('BAHIA', 'BA'); 
+
+
+DROP TABLE IF EXISTS cidade;
+CREATE TABLE cidade(
+id INT NOT NULL AUTO_INCREMENT,
+nome VARCHAR(255) NOT NULL,
+ativo CHAR(1) NOT NULL DEFAULT 'S',
+estado_id INT NOT NULL, 
+CONSTRAINT pk_cidade PRIMARY KEY (id),
+CONSTRAINT tabela_cidade_ativo_prescisam_estar_entre_s_ou_n CHECK (ativo IN ('S', 'N')),
+CONSTRAINT fk_cidade_estado FOREIGN KEY (estado_id) REFERENCES estado (id)
+);
+
+INSERT INTO cidade (id, nome, ativo, estado_id) VALUES (NULL, 'PARANAVAÍ','S', 1); 
+INSERT INTO cidade VALUES (NULL, 'SÃO PAULO','S', 2);
+INSERT INTO cidade (nome,estado_id) VALUES ('SALVADOR', 3); 
+
+ALTER TABLE cliente DROP CONSTRAINT tabela_cliente_ativo_prescisam_estar_entre_s_ou_n;
+ALTER TABLE cliente MODIFY COLUMN ativo ENUM('S','N') NOT NULL;
+ALTER TABLE cidade DROP CONSTRAINT tabela_cidade_ativo_prescisam_estar_entre_s_ou_n;
+ALTER TABLE cidade MODIFY COLUMN ativo ENUM('S','N') NOT NULL;
+
+DROP TABLE IF EXISTS pagamento;
+CREATE TABLE pagamento(
+id INT NOT NULL AUTO_INCREMENT,
+valor DECIMAL(7,2)  NOT NULL,
+parcelas DECIMAL NOT NULL DEFAULT 0,
+CONSTRAINT pagamento_pk PRIMARY KEY(id)
+);
+
+INSERT INTO pagamento (valor, parcelas) VALUES (58.29, 0);
+INSERT INTO pagamento (valor, parcelas) VALUES (32.55, 2);
+INSERT INTO pagamento (valor, parcelas) VALUES (10.97, 0);
+
+
+DROP TABLE IF EXISTS caixa;
+CREATE TABLE caixa(
+id INT NOT NULL AUTO_INCREMENT,
+datahora DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+saldo_total DECIMAL(7, 2) NOT NULL,
+CONSTRAINT caixa_pk PRIMARY KEY(id)
+);
+
+INSERT INTO caixa (saldo_total) VALUES (58.29);
+INSERT INTO caixa (saldo_total) VALUES (32.55);
+INSERT INTO caixa (saldo_total) VALUES (10.97);
+
+DROP TABLE IF EXISTS nota_fiscal;
+CREATE TABLE nota_fiscal(
+id INT NOT NULL AUTO_INCREMENT,
+datahora DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+descricao VARCHAR(255) NOT NULL,
+caixa_id INT NOT NULL,
+CONSTRAINT pk_nota_fiscal PRIMARY KEY (id),
+CONSTRAINT fk_nota_caixa FOREIGN KEY (caixa_id) REFERENCES caixa (id)
+);
+
+INSERT INTO nota_fiscal (descricao, caixa_id) VALUES ('SUA COMPRA: 58.29R$', 1);
+INSERT INTO nota_fiscal (descricao, caixa_id) VALUES ('SUA COMPRA: 32.55R$', 2);
+INSERT INTO nota_fiscal (descricao, caixa_id) VALUES ('SUA COMPRA: 10.97R$', 3);
+
+DROP TABLE IF EXISTS remedios;
+CREATE TABLE remedios(
+id INT NOT NULL AUTO_INCREMENT,
+nome_produto VARCHAR(255) NOT NULL,
+preco_produto DECIMAL(7, 2) NOT NULL,
+estoque CHAR(3) NOT NULL DEFAULT 'SIM',
+descricao VARCHAR(255) NOT NULL,
+CONSTRAINT pk_remedios PRIMARY KEY (id)
+);
+
+INSERT INTO remedios (nome_produto, preco_produto, descricao) VALUES ('IBUPROFENO', 9.99, 'CONTRA FEBRE, DOR DE CABECA');
+INSERT INTO remedios (nome_produto, preco_produto, descricao) VALUES ('DIPIRONA', 5.99, 'CONTRA FEBRE, DOR DE CABECA');
+INSERT INTO remedios (nome_produto, preco_produto, descricao) VALUES ('NIMESULIDA', 9.99, 'CONTROLAR DORES LEVES E MODERADAS');
+
+DROP TABLE IF EXISTS categoria;
+CREATE TABLE categoria(
+id INT NOT NULL AUTO_INCREMENT,
+nome_categoria VARCHAR(255) NOT NULL,
+CONSTRAINT pk_categoria PRIMARY KEY (id)
+);
+
+INSERT INTO categoria (nome_categoria) VALUES ('ANALGÉSICO');
+INSERT INTO categoria (nome_categoria) VALUES ('ANALGÉSICO');
+INSERT INTO categoria (nome_categoria) VALUES ('ANTI-INFLAMATORIO');
+
+DROP TABLE IF EXISTS tipo;
+CREATE TABLE tipo(
+id INT NOT NULL AUTO_INCREMENT,
+nome_tipo VARCHAR(255) NOT NULL,
+CONSTRAINT pk_tipo PRIMARY KEY (id)
+);
+
+INSERT INTO tipo (nome_tipo) VALUES ('NAO ESTEROIDAL (AINE)');
+INSERT INTO tipo (nome_tipo) VALUES ('NAO ESTEROIDAL (AINE)');
+INSERT INTO tipo (nome_tipo) VALUES ('NAO ESTEROIDAL (AINE)');
+
+DROP TABLE IF EXISTS remedios_tipo;
+CREATE TABLE remedios_tipo(
+tipo_id INT NOT NULL,
+remedios_id INT NOT NULL,
+CONSTRAINT fk_tipo_remedios FOREIGN KEY (tipo_id) REFERENCES tipo (id),
+CONSTRAINT fk_remedios_tipos FOREIGN KEY (remedios_id) REFERENCES remedios (id)
+);
+
+INSERT INTO remedios_tipo (tipo_id, remedios_id) VALUES (1, 1);
+INSERT INTO remedios_tipo (tipo_id, remedios_id) VALUES (2, 2);
+INSERT INTO remedios_tipo (tipo_id, remedios_id) VALUES (3, 3);
+
+DROP TABLE IF EXISTS remedios_categoria;
+CREATE TABLE remedios_categoria(
+categoria_id INT NOT NULL,
+remedios_id INT NOT NULL,
+CONSTRAINT fk_categoria_remedios FOREIGN KEY (categoria_id) REFERENCES categoria (id),
+CONSTRAINT fk_remedios_categoria FOREIGN KEY (remedios_id) REFERENCES remedios (id)
+);
+
+INSERT INTO remedios_categoria (categoria_id, remedios_id) VALUES (1, 1);
+INSERT INTO remedios_categoria (categoria_id, remedios_id) VALUES (2, 2);
+INSERT INTO remedios_categoria (categoria_id, remedios_id) VALUES (3, 3);
+
+
+SELECT * FROM cliente;
+SELECT * FROM cidade;
+SELECT * FROM estado;
+SELECT * FROM remedios;
+SELECT * FROM caixa;
+SELECT * FROM nota_fiscal;
+SELECT * FROM categoria;
+SELECT * FROM tipo;
